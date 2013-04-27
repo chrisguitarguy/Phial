@@ -10,6 +10,7 @@
 namespace Phial;
 
 use Igorw\Silex\ConfigServiceProvider;
+use Phial\Storage\UserStorage;
 
 /**
  * The central application class.
@@ -52,6 +53,25 @@ class Phial extends \Silex\Application
         $this->registerProviders();
 
         $this->loadConfig();
+
+        $this->registerSchemas();
+
+        $this['current_user'] = $this->share(function($app) {
+            if (
+                ($user_id = $app['session']->get('user_id')) &&
+                ($user = $app['users']->getById($user_id))
+            ) {
+                return $user;
+            } else {
+                return new Entity\AnonymousUser();
+            }
+        });
+
+        $this['users_class'] = __NAMESPACE__ . '\\Storage\\UserStorage';
+        $this['user_entity_class'] = __NAMESPACE__ . '\\Entity\\User';
+        $this['users'] = $this->share(function($app) {
+            return new $app['users_class']($app['db'], $app['user_entity_class']);
+        });
     }
 
     protected function registerProviders()
@@ -137,5 +157,32 @@ class Phial extends \Silex\Application
         } elseif (file_exists($env_config . '.dist')) {
             $this->register(new ConfigServiceProvider($env_config . '.dist', $replacements));
         }
+    }
+
+    /**
+     * Deal with all of the db schema things.
+     *
+     * @since   0.1
+     * @access  protected
+     * @return  void
+     */
+    protected function registerSchemas()
+    {
+        $this['user_schema_class'] = __NAMESPACE__ . '\\Schema\\UserSchema';
+        $this['user_schema'] = $this->share(function($app) {
+            return new Schema\UserSchema(
+                UserStorage::USER_TABLE,
+                UserStorage::CAP_TABLE,
+                UserStorage::USER_CAPS
+            );
+        });
+
+        $this['schema_manager'] = $this->share(function($app) {
+            $manager = new Schema\SchemaManager();
+
+            $manager->addSchema('users', $app['user_schema']);
+
+            return $manager;
+        });
     }
 }

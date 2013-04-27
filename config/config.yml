@@ -22,7 +22,7 @@ monolog.logfile: %app_root%/log/application.log
 
 db.options:
     dbname: lander
-    user: root
+    user: ~
     password: ~
     host: localhost
     driver: pdo_pgsql
