@@ -13,13 +13,5 @@ interface UserInterface
 {
     public function loggedIn();
 
-    public function can($cap);
-
-    public function addCapability($cap);
-
-    public function removeCapability($cap);
-
-    public function setCapabilities(array $caps);
-
-    public function getCapabilities();
+    public function hasRole($role);
 }

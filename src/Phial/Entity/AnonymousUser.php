@@ -16,28 +16,8 @@ class AnonymousUser extends EntityBase implements UserInterface
         return false;
     }
 
-    public function can($cap)
-    {
-        return 'exist' === $cap ?: false;
-    }
-
-    public function addCapability($cap)
-    {
-        return $this;
-    }
-
-    public function removeCapability($cap)
+    public function hasRole($role)
     {
         return false;
-    }
-
-    public function setCapabilities(array $caps)
-    {
-        return $this;
-    }
-
-    public function getCapabilities()
-    {
-        return array();
     }
 }

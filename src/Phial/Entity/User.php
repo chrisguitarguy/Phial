@@ -15,7 +15,8 @@ class User extends EntityBase implements UserInterface
 
     public function __construct(array $db_store=array(), array $caps=array())
     {
-
+        $this->setStorage($db_store);
+        $this->setCapabilities($caps);
     }
 
     public function loggedIn()
@@ -23,35 +24,8 @@ class User extends EntityBase implements UserInterface
         return true;
     }
 
-    public function can($cap)
+    public function hasRole($role)
     {
-        return 'exist' === $cap ?: !empty($this->caps[$cap]);
-    }
-
-    public function addCapability($cap)
-    {
-        $this->caps[$cap] = true;
-        return $this;
-    }
-
-    public function removeCapability($cap)
-    {
-        if (isset($this->caps[$cap])) {
-            unset($this->caps[$cap]);
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setCapabilities(array $caps)
-    {
-        $this->caps = array_combine($caps, array_fill(0, count($caps), true));
-        return $this;
-    }
-
-    public function getCapabilities()
-    {
-        return $this->caps;
+        return !empty($this['user_role']) && $role === $this['user_role'];
     }
 }
