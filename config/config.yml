@@ -1,0 +1,31 @@
+# You probably shouldn't mess with this file
+# edit your environment config files instead
+
+site_name: Lander
+domain: lander.dev
+admin_email: admin@lander.dev
+monolog.name: Lander
+
+login_redirect: account.edit # should be a route name
+
+upload_dir: %app_root%/public/uploads
+
+swiftmailer.options:
+    host: localhost
+    port: 25
+    username: ''
+    password: ''
+    encryption: ~
+    auth_mode: ~
+
+monolog.logfile: %app_root%/log/application.log
+
+db.options:
+    dbname: lander
+    user: root
+    password: ~
+    host: localhost
+    driver: pdo_pgsql
+
+session.storage.options:
+    name: _lander_sess

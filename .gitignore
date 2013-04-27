@@ -1,0 +1,31 @@
+/vendor
+
+# ignore certain files
+*.swp
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.7z
+
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.app
+*.o
+*.so
+
+
+# system files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# ignore Sass cache
+.sass-cache
