@@ -14,15 +14,12 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new \Phial\Phial(dirname(__DIR__));
 
-$console = new \Symfony\Component\Console\Application('Phial - A Simple CMS', '0.1');
+$console = new \Phial\PhialConsole($app);
 
 // if we end up sending emails from the command line,
 // we have to manually flush the swiftmailer spool
 // can't do that with autoexit turned on.
 $console->setAutoExit(false);
-
-$console->add(new \Phial\Command\InstallCommand($app));
-$console->add(new \Phial\Command\UpgradeCommand($app));
 
 $exit_code = $console->run();
 
