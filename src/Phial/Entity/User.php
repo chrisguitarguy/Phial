@@ -13,10 +13,9 @@ class User extends EntityBase implements UserInterface
 {
     private $caps = array();
 
-    public function __construct(array $db_store=array(), array $caps=array())
+    public function __construct(array $db_store=array())
     {
         $this->setStorage($db_store);
-        $this->setCapabilities($caps);
     }
 
     public function loggedIn()
