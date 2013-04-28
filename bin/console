@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Phial Console
+ *
+ * Command line interaction with the Phial application.
+ *
+ * @package     Phial
+ * @since       0.1
+ * @license     http://opensource.org/licenses/MIT MIT
+ */
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = new \Phial\Phial(dirname(__DIR__));
+
+$console = new \Symfony\Component\Console\Application('Phial - A Simple CMS', '0.1');
+
+// if we end up sending emails from the command line,
+// we have to manually flush the swiftmailer spool
+// can't do that with autoexit turned on.
+$console->setAutoExit(false);
+
+$console->add(new \Phial\Command\InstallCommand($app));
+$console->add(new \Phial\Command\UpgradeCommand($app));
+
+$exit_code = $console->run();
+
+if ($exit_code > 255) {
+    $exit_code = 1;
+}
+
+// flush the swiftmailer spool
+if ($app['mailer.initialized']) {
+    $app['swiftmailer.spooltransport']->getSpool()->flushQueue($app['swiftmailer.transport']);
+}
+
+exit($exit_code);
