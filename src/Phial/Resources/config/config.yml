@@ -1,10 +1,10 @@
 # You probably shouldn't mess with this file
 # edit your environment config files instead
 
-site_name: Lander
-domain: lander.dev
-admin_email: admin@lander.dev
-monolog.name: Lander
+site_name: Phial
+domain: phial.dev
+admin_email: admin@phial.dev
+monolog.name: Phial
 
 login_redirect: account.edit # should be a route name
 

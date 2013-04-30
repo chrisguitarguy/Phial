@@ -95,7 +95,7 @@ class Phial extends \Silex\Application
         $this->register(new \Silex\Provider\FormServiceProvider());
 
         $this->register(new \Silex\Provider\TwigServiceProvider(), array(
-            'twig.path'     => $this->pathJoin($this->root, 'views'),
+            'twig.path'     => $this->pathJoin(__DIR__, 'Resources', 'views'),
             'twig.options'  => array(
                 'cache'         => $this['debug'] ? $this->pathJoin($this->root, 'cache') : false,
             ),
@@ -109,8 +109,10 @@ class Phial extends \Silex\Application
 
         $this['twig.loader.filesystem'] = $this->share(
             $this->extend('twig.loader.filesystem', function($loader, $app) {
-                $loader->addPath($app['twig.path'].DIRECTORY_SEPARATOR.'admin', 'admin');
-                $loader->addPath($app['twig.path'].DIRECTORY_SEPARATOR.'front', 'front');
+                $view_dir = __DIR__.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'views';
+
+                $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'admin', 'admin');
+                $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'front', 'front');
 
                 return $loader;
             })
@@ -146,11 +148,22 @@ class Phial extends \Silex\Application
             'app_root'      => $this->root,
         );
 
+        // load the default config
         $this->register(new ConfigServiceProvider(
-            $this->pathJoin($this->root, 'config', 'config.yml'),
+            $this->pathJoin(__DIR__, 'Resources', 'config', 'config.yml'),
             $replacements
         ));
 
+        // allow users to have their own configs...
+        $main_config = $this->pathJoin($this->root, 'config', 'config.yml');
+        if (file_exists($main_config)) {
+            $this->register(new ConfigServiceProvider(
+                $this->pathJoin($this->root, 'config', 'config.yml'),
+                $replacements
+            ));
+        }
+
+        // and an environment specific config as well
         $env_config = $this->pathJoin($this->root, 'config', $this->env . '.yml');
         if (file_exists($env_config)) {
             $this->register(new ConfigServiceProvider($env_config, $replacements));
