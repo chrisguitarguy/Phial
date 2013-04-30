@@ -72,6 +72,15 @@ class Phial extends \Silex\Application
         $this['users'] = $this->share(function($app) {
             return new $app['users_class']($app['db'], $app['user_entity_class']);
         });
+
+        $this['escaper_class'] = __NAMESPACE__ . '\\Escaper';
+        $this['escaper'] = $this->share(function($app) {
+            return new $app['escaper_class'];
+        });
+
+        $this['template_tag_ext'] = function($app) {
+            return new Twig\TemplateTagExtension($app['escaper']);
+        };
     }
 
     protected function registerProviders()
@@ -103,6 +112,8 @@ class Phial extends \Silex\Application
 
         $this['twig'] = $this->share($this->extend('twig', function($twig, $app) {
             $twig->addGlobal('site_name', $app['site_name']);
+
+            $twig->addException($app['template_tag_ext']);
 
             return $twig;
         }));
