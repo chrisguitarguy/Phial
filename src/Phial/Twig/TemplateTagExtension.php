@@ -29,12 +29,12 @@ class TemplateTagExtension extends \Twig_Extension
             'language_attributes'   => new \Twig_Function_Method(
                 $this,
                 'languageAttributes',
-                array('is_safe' => 'all')
+                array('is_safe' => array('all'))
             ),
             'body_class'            => new \Twig_Function_Method(
                 $this,
                 'bodyClass',
-                array('is_safe' => 'all')
+                array('is_safe' => array('all'))
             ),
         );
     }
@@ -65,5 +65,10 @@ class TemplateTagExtension extends \Twig_Extension
         $classes = array_map(array($this->escaper, 'attr'), $classes);
 
         return 'class="' . implode(' ', $classes) . '"';
+    }
+
+    public function getName()
+    {
+        return 'Template Tag Extension';
     }
 }

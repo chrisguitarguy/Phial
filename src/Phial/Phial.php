@@ -56,6 +56,8 @@ class Phial extends \Silex\Application
 
         $this->registerSchemas();
 
+        $this->registerControllers();
+
         $this['current_user'] = $this->share(function($app) {
             if (
                 ($user_id = $app['session']->get('user_id')) &&
@@ -113,7 +115,7 @@ class Phial extends \Silex\Application
         $this['twig'] = $this->share($this->extend('twig', function($twig, $app) {
             $twig->addGlobal('site_name', $app['site_name']);
 
-            $twig->addException($app['template_tag_ext']);
+            $twig->addExtension($app['template_tag_ext']);
 
             return $twig;
         }));
@@ -208,5 +210,36 @@ class Phial extends \Silex\Application
 
             return $manager;
         });
+    }
+
+    /**
+     * Register our controller services and controller providers.
+     *
+     * @since   0.1
+     * @access  protected
+     * @return  void
+     */
+    protected function registerControllers()
+    {
+        $app = $this;
+
+        $this['init_controller'] = $this->protect(function(\Phial\Controller\Controller $c) use ($app) {
+            $c->setTwig($app['twig'])
+                ->setLogger($app['monolog'])
+                ->setDispatcher($app['dispatcher'])
+                ->setRequest($app['request'])
+                ->setForms($app['form.factory']);
+
+            return $c;
+        });
+
+        $this['controller.user_admin_class'] = 'Phial\\Controller\\UserAdmin';
+        $this['controller.user_admin'] = function($app) {
+            $c = new $app['controller.user_admin_class']($app['users']);
+
+            return $app['init_controller']($c);
+        };
+
+        $this->mount('/admin', new Provider\UserAdminControllerProvider());
     }
 }
