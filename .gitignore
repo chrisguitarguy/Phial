@@ -1,6 +1,7 @@
 /vendor
 /config*
-!/config/config.yml
+/composer.lock
+/log
 
 # ignore certain files
 *.swp
