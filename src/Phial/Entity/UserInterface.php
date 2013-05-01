@@ -14,4 +14,6 @@ interface UserInterface
     public function loggedIn();
 
     public function hasRole($role);
+
+    public function validPassword($pass);
 }

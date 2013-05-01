@@ -20,4 +20,9 @@ class AnonymousUser extends EntityBase implements UserInterface
     {
         return false;
     }
+
+    public function validPassword($pass)
+    {
+        return false;
+    }
 }

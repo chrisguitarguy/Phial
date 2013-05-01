@@ -15,7 +15,9 @@ class User extends EntityBase implements UserInterface
 
     public function __construct(array $db_store=array())
     {
-        $this->setStorage($db_store);
+        foreach ($db_store as $key => $val) {
+            $this[$key] = $val;
+        }
     }
 
     public function loggedIn()
@@ -26,5 +28,19 @@ class User extends EntityBase implements UserInterface
     public function hasRole($role)
     {
         return !empty($this['user_role']) && $role === $this['user_role'];
+    }
+
+    public function validPassword($pass)
+    {
+        return $this['user_pass'] && password_verify($pass, $this['user_pass']);
+    }
+
+    public function offsetSet($key, $val)
+    {
+        if ('user_pass' === $key) {
+            $val = password_hash($val, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+
+        return parent::offsetSet($key, $val);
     }
 }
