@@ -196,11 +196,7 @@ class Phial extends \Silex\Application
     {
         $this['user_schema_class'] = __NAMESPACE__ . '\\Schema\\UserSchema';
         $this['user_schema'] = $this->share(function($app) {
-            return new Schema\UserSchema(
-                UserStorage::USER_TABLE,
-                UserStorage::CAP_TABLE,
-                UserStorage::USER_CAPS
-            );
+            return new Schema\UserSchema(UserStorage::USER_TABLE);
         });
 
         $this['schema_manager'] = $this->share(function($app) {
