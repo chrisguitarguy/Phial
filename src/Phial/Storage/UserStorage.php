@@ -36,7 +36,7 @@ class UserStorage extends StorageBase
                 continue;
             }
 
-            if (!isset($user[$col])) {
+            if (isset($user[$col])) {
                 $to_save[$col] = $user[$col];
 
                 if (is_null($col)) {
@@ -61,12 +61,12 @@ class UserStorage extends StorageBase
     {
         $to_save = $binding = array();
 
-        foreach ($this->getField() as $col => $bind) {
+        foreach ($this->getFields() as $col => $bind) {
             if ('user_id' === $col) {
                 continue;
             }
 
-            if (!isset($user[$col])) {
+            if (isset($user[$col])) {
                 $to_save[$col] = $user[$col];
 
                 if (is_null($user[$col])) {
