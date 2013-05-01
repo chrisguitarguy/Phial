@@ -30,6 +30,7 @@ class PhialConsole extends \Symfony\Component\Console\Application
 
         $cmds[] = new Command\InstallCommand($this->app);
         $cmds[] = new Command\UpgradeCommand($this->app);
+        $cmds[] = new Command\ListUsersCommand($this->app);
         $cmds[] = new Command\AddUserCommand($this->app);
 
         return $cmds;
