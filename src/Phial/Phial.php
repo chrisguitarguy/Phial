@@ -105,10 +105,11 @@ class Phial extends \Silex\Application
 
         $this->register(new \Silex\Provider\FormServiceProvider());
 
+        $twig_cache = $this->pathJoin($this->root, 'cache');
         $this->register(new \Silex\Provider\TwigServiceProvider(), array(
             'twig.path'     => $this->pathJoin(__DIR__, 'Resources', 'views'),
             'twig.options'  => array(
-                'cache'         => $this['debug'] ? $this->pathJoin($this->root, 'cache') : false,
+                'cache'         => $this['debug'] && is_dir($twig_cache) ? $twig_cache : false,
             ),
         ));
 
