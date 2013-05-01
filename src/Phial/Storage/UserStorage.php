@@ -53,7 +53,7 @@ class UserStorage extends StorageBase
             array(
                 'user_id'   => $user['user_id'],
             ),
-            $bind
+            $binding
         );
     }
 
