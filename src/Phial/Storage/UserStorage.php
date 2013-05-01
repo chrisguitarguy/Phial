@@ -86,7 +86,7 @@ class UserStorage extends StorageBase
             throw new \InvalidArgumentException('User must have a user_id value to delete');
         }
 
-        $this->getConnection()->delete(static::USER_TABLE, array(
+        return $this->getConnection()->delete(static::USER_TABLE, array(
             'user_id'   => $user['user_id'],
         ), array(
             'user_id'   => 'integer',
