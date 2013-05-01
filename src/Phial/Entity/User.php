@@ -15,9 +15,7 @@ class User extends EntityBase implements UserInterface
 
     public function __construct(array $db_store=array())
     {
-        foreach ($db_store as $key => $val) {
-            $this[$key] = $val;
-        }
+        $this->setStorage($db_store);
     }
 
     public function loggedIn()
