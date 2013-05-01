@@ -18,7 +18,7 @@ class PhialConsole extends \Symfony\Component\Console\Application
 {
     protected $app;
 
-    public function __construct(\Silex\Application $app, $name='Phial', $version='0.1')
+    public function __construct(Phial $app, $name='Phial', $version='0.1')
     {
         $this->app = $app;
         parent::__construct($name, $version);
@@ -30,6 +30,7 @@ class PhialConsole extends \Symfony\Component\Console\Application
 
         $cmds[] = new Command\InstallCommand($this->app);
         $cmds[] = new Command\UpgradeCommand($this->app);
+        $cmds[] = new Command\AddUserCommand($this->app);
 
         return $cmds;
     }
