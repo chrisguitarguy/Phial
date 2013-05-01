@@ -20,7 +20,8 @@
         "swiftmailer/swiftmailer": "4.2.*",
         "monolog/monolog": ">=1.0.0",
         "igorw/config-service-provider": "v1.2.0",
-        "ircmaxell/password-compat": "1.0.*@dev"
+        "ircmaxell/password-compat": "1.0.*@dev",
+        "psr/log": "1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

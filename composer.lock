@@ -1,5 +1,5 @@
 {
-    "hash": "ebe6a8da5ab667424d5079710bdb483a",
+    "hash": "2e8595192ca05dcfa83aa4ee0758714d",
     "packages": [
         {
             "name": "doctrine/common",
@@ -196,12 +196,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ircmaxell/password_compat.git",
-                "reference": "v1.0.0"
+                "reference": "v1.0.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/v1.0.3",
+                "reference": "v1.0.3",
                 "shasum": ""
             },
             "type": "library",
@@ -227,7 +227,7 @@
                 "hashing",
                 "password"
             ],
-            "time": "2013-01-14 16:49:31"
+            "time": "2013-04-30 19:58:08"
         },
         {
             "name": "monolog/monolog",
@@ -381,12 +381,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Silex.git",
-                "reference": "7244eb8e5c3bff655291f6e3addc942b27c369ff"
+                "reference": "a0b5f746cf4e5f93c9242ecd7804d5c23f419f85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Silex/zipball/7244eb8e5c3bff655291f6e3addc942b27c369ff",
-                "reference": "7244eb8e5c3bff655291f6e3addc942b27c369ff",
+                "url": "https://api.github.com/repos/fabpot/Silex/zipball/a0b5f746cf4e5f93c9242ecd7804d5c23f419f85",
+                "reference": "a0b5f746cf4e5f93c9242ecd7804d5c23f419f85",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +455,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2013-04-27 07:31:15"
+            "time": "2013-04-30 08:55:57"
         },
         {
             "name": "swiftmailer/swiftmailer",
