@@ -37,7 +37,7 @@ abstract class EntityBase implements \ArrayAccess
             return $this->storage[$key];
         }
 
-        $this->sendWarning();
+        $this->sendWarning($key);
     }
 
     public function offsetUnset($key)
@@ -45,7 +45,7 @@ abstract class EntityBase implements \ArrayAccess
         if ($this->offsetExists($key)) {
             unset($this->storage[$key]);
         } else {
-            $this->sendWarning();
+            $this->sendWarning($key);
         }
     }
 
