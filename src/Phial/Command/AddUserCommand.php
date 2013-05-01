@@ -59,8 +59,19 @@ class AddUserCommand extends BaseCommand
 
         $user['user_pass'] = $pass;
 
-        $res = $this->app['users']->create($user);
+        try {
+            $res = $this->app['users']->create($user);
+        } catch (\Exception $e) {
+            $out->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            return 1;
+        }
 
-        echo $res, PHP_EOL;
+        if ($res) {
+            $out->writeln('<info>User created.</info>');
+            return 0;
+        } else {
+            $out->writeln('<warning>User was not created.</warning>');
+            return 1;
+        }
     }
 }
