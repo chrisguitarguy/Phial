@@ -28,4 +28,9 @@ db.options:
     driver: pdo_pgsql
 
 session.storage.options:
-    name: _lander_sess
+    name: _phial_sess
+
+assetic.options:
+    web: %app_root%/public
+    debug: false
+    auto_dump: false
