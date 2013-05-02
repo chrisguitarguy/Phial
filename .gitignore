@@ -3,6 +3,8 @@
 /composer.lock
 /log
 /cache
+/public*
+!/public/index.php
 
 # ignore certain files
 *.swp
