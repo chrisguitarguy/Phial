@@ -147,38 +147,7 @@ class Phial extends \Silex\Application
 
         $this->register(new Provider\AsseticServiceProvider());
 
-        $this['assetic'] = $this->share($this->extend('assetic', function($factory, $app) {
-            $factory->addWorker(new \Assetic\Factory\Worker\CacheBustingWorker());
-
-            $am = $factory->getAssetManager();
-
-            $jquery = $factory->createAsset(array(
-                'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js',
-            ), array(), array(
-                'name'      => 'jquery',
-                'output'    => 'js/*.js',
-            ));
-            $am->set('jquery', $jquery);
-
-            $admin_css = $factory->createAsset(array(
-                __DIR__.'/Resources/static/admin/css/*.css',
-            ), array(), array(
-                'name'      => 'phial_admin_css',
-                'output'    => 'css/admin.css',
-            ));
-            $am->set('phial_admin_css', $admin_css);
-
-            $admin_js = $factory->createAsset(array(
-                '@jquery',
-                __DIR__.'/Resources/static/admin/js/*.js',
-            ), array(), array(
-                'name'      => 'phial_admin_js',
-                'output'    => 'js/admin.js',
-            ));
-            $am->set('phial_admin_js', $admin_js);
-
-            return $factory;
-        }));
+        $this->register(new Provider\StaticResourceProvider());
     }
 
     /**
