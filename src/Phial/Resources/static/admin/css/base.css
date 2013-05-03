@@ -1,0 +1,38 @@
+body {
+  position: relative;
+  top: 27px;
+  color: #333;
+}
+
+.admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 27px;
+  background: #3B3B3B;
+  color: #EDEDED;
+}
+
+.admin-bar > .pad {
+  padding: 5px 1em;
+}
+
+.admin-bar a {
+  color: #EDEDED;
+  text-decoration: none;
+}
+
+.admin-bar .bar-item {
+  float: left;
+  margin-left: 1em;
+}
+
+.admin-bar .bar-item:first-child {
+  margin-left: 0;
+}
+
+.inner-wrap {
+  width: 960px;
+  margin: 0 auto;
+}

@@ -16,5 +16,31 @@
 </head>
 <body {{ body_class('admin') }}>
 
+<div class="admin-bar">
+    <div class="pad">
+
+        <div class="bar-item">
+            <a href="{{ url('admin') }}">{{ app.site_name }}</a>
+        </div>
+
+        <div class="bar-item">
+            <a href="{{ url('admin.users.list') }}">Users</a>
+        </div>
+
+    </div>
+</div>
+
+<header class="admin-header">
+    <div class="outer-wrap">
+        <div class="inner-wrap">
+
+            <h1 class="admin-title">{% block admin_title %}{{ app.site_name }} Admin{% endblock %}</h1>
+
+            {% block admin_after_title %}{% endblock %}
+
+        </div>
+    </div>
+</header>
+
 </body>
 </html>
