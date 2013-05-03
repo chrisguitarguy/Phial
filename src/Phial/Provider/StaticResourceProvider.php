@@ -28,8 +28,6 @@ class StaticResourceProvider implements \Silex\ServiceProviderInterface
         }
 
         $app['assetic'] = $app->share($app->extend('assetic', function($factory, $app) {
-            $factory->addWorker(new \Assetic\Factory\Worker\CacheBustingWorker());
-
             $am = $factory->getAssetManager();
 
             $dir = dirname(__DIR__);

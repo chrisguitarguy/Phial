@@ -33,4 +33,5 @@ session.storage.options:
 assetic.options:
     web: %app_root%/public
     debug: false
+    cache_busting: false
     auto_dump: true # turn this off on production sites!

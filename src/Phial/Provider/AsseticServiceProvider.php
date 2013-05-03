@@ -26,6 +26,7 @@ class AsseticServiceProvider implements \Silex\ServiceProviderInterface
             'debug'         => false,
             'web'           => null,
             'auto_dump'     => false,
+            'cache_busting' => false,
         );
 
         $app['assetic.asset_manager'] = $app->share(function($app) {
@@ -44,6 +45,10 @@ class AsseticServiceProvider implements \Silex\ServiceProviderInterface
             return new \Assetic\Extension\Twig\AsseticExtension($app['assetic']);
         });
 
+        $app['assetic.cache_buster'] = $app->share(function($app) {
+            return new \Assetic\Factory\Worker\CacheBustingWorker();
+        });
+
         $app['assetic'] = $app->share(function($app) {
             $factory = new \Assetic\Factory\AssetFactory(
                 $app['assetic.options']['web'],
@@ -52,6 +57,10 @@ class AsseticServiceProvider implements \Silex\ServiceProviderInterface
 
             $factory->setAssetManager($app['assetic.asset_manager']);
             $factory->setFilterManager($app['assetic.filter_manager']);
+
+            if ($app['assetic.options']['cache_busting']) {
+                $factory->addWorker($app['assetic.cache_buster']);
+            }
 
             return $factory;
         });
