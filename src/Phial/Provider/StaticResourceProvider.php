@@ -35,7 +35,7 @@ class StaticResourceProvider implements \Silex\ServiceProviderInterface
             $dir = dirname(__DIR__);
 
             $jquery = $factory->createAsset(array(
-                'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js',
+                $dir.'/Resources/static/vendor/jquery.min.js',
             ), array(), array(
                 'name'      => 'jquery',
                 'output'    => 'js/*.js',
