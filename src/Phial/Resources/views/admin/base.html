@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html {{ language_attributes() }}>
 <head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block head_meta -%}
+        <meta name="robots" content="noindex,follow" />
+    {% endblock %}
+
+
+    <link href="{{ asset('phial_admin_css') }}" type="text/css" rel="stylesheet" />
+    {% block stylesheets %}{% endblock %}
+
+    <script type="text/javascript" src="{{ asset('phial_admin_js') }}"></script>
+    {% block javascripts %}{% endblock %}
 
 </head>
 <body {{ body_class('admin') }}>
