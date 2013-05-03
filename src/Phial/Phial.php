@@ -83,6 +83,13 @@ class Phial extends \Silex\Application
         $this['template_tag_ext'] = function($app) {
             return new Twig\TemplateTagExtension($app['escaper']);
         };
+
+        $this['assetic_func_ext'] = function($app) {
+            return new Twig\AsseticFunctionExtension(
+                $app['assetic']->getAssetManager(),
+                $app['escaper']
+            );
+        };
     }
 
     protected function registerProviders()
@@ -117,7 +124,7 @@ class Phial extends \Silex\Application
             $twig->addGlobal('site_name', $app['site_name']);
 
             $twig->addExtension($app['template_tag_ext']);
-            $twig->addExtension($app['assetic.twig_extension']);
+            $twig->addExtension($app['assetic_func_ext']);
 
 
             return $twig;
