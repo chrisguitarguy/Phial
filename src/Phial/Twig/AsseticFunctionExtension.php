@@ -16,7 +16,7 @@ namespace Phial\Twig;
  * twig templates as resources.
  *
  * @since   0.1
- * @author  Christopher Davis <chris@pmg.co>
+ * @author  Christopher Davis <http://christopherdavis.me>
  */
 class AsseticFunctionExtension extends \Twig_Extension
 {
