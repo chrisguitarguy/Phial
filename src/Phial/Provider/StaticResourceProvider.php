@@ -42,16 +42,32 @@ class StaticResourceProvider implements \Silex\ServiceProviderInterface
             ));
             $am->set('jquery', $jquery);
 
-            $normalize = $factory->createAsset(array(
-                $dir . '/Resources/static/css/normalize.css',
+            $gumby_css = $factory->createAsset(array(
+                $dir.'/Resources/static/vendor/gumby/gumby.css',
             ), array(), array(
-                'name'      => 'normalize',
+                'name'      => 'gumby',
                 'output'    => 'css/*.css',
             ));
-            $am->set('normalize', $normalize);
+            $am->set('gumby_css', $gumby_css);
+
+            $gumby_js = $factory->createAsset(array(
+                $dir.'/Resources/static/vendor/gumby/gumby.min.js',
+            ), array(), array(
+                'name'      => 'gumby',
+                'output'    => 'js/*.js',
+            ));
+            $am->set('gumby_js', $gumby_js);
+
+            $modernizr = $factory->createAsset(array(
+                $dir.'/Resources/static/vendor/modernizr/modernizr-2.6.2.min.js',
+            ), array(), array(
+                'name'      => 'modernizr',
+                'output'    => 'js/*.js',
+            ));
+            $am->set('modernizr', $modernizr);
 
             $admin_css = $factory->createAsset(array(
-                '@normalize',
+                '@gumby_css',
                 $dir.'/Resources/static/admin/css/*.css',
             ), array(), array(
                 'name'      => 'phial_admin_css',
@@ -61,6 +77,8 @@ class StaticResourceProvider implements \Silex\ServiceProviderInterface
 
             $admin_js = $factory->createAsset(array(
                 '@jquery',
+                '@modernizr',
+                '@gumby_js',
                 $dir.'/Resources/static/admin/js/*.js',
             ), array(), array(
                 'name'      => 'phial_admin_js',
