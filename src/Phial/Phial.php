@@ -50,6 +50,8 @@ class Phial extends \Silex\Application
             $this['debug'] = true;
         }
 
+        $this['site_name'] = 'Phial';
+
         $this->registerProviders();
 
         $this->loadConfig();
@@ -250,6 +252,14 @@ class Phial extends \Silex\Application
             return $app['init_controller']($c);
         };
 
+        $this['controller.admin_class'] = 'Phial\\Controller\\Admin';
+        $this['controller.admin'] = function($app) {
+            $c = new $app['controller.admin_class']();
+
+            return $app['init_controller']($c);
+        };
+
         $this->mount('/admin', new Provider\UserAdminControllerProvider());
+        $this->mount('/admin', new Provider\AdminControllerProvider());
     }
 }
