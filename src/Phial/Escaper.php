@@ -25,4 +25,19 @@ class Escaper
     {
         return strtolower(preg_replace('/[^a-zA-Z0-9:_-]/', '', $tag));
     }
+
+    public function url($url)
+    {
+        return rawurlencode($url);
+    }
+
+    public function trailingslash($str)
+    {
+        return rtrim($str, '/') . '/';
+    }
+
+    public function leadingslash($str)
+    {
+        return '/' . ltrim($str, '/');
+    }
 }
