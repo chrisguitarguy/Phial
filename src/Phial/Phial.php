@@ -20,6 +20,9 @@ use Phial\Storage\UserStorage;
  */
 class Phial extends \Silex\Application
 {
+    const USER_TABLE    = 'phial_users';
+    const CONTENT_TABLE = 'phial_content';
+
     /**
      * The "application" root where we can find the view, cache, and config
      * directories.
@@ -74,7 +77,11 @@ class Phial extends \Silex\Application
         $this['users_class'] = __NAMESPACE__ . '\\Storage\\UserStorage';
         $this['user_entity_class'] = __NAMESPACE__ . '\\Entity\\User';
         $this['users'] = $this->share(function($app) {
-            return new $app['users_class']($app['db'], $app['user_entity_class']);
+            return new $app['users_class'](
+                $app['db'],
+                $app['user_entity_class'],
+                $app['user_table']
+            );
         });
 
         $this['escaper_class'] = __NAMESPACE__ . '\\Escaper';
@@ -210,9 +217,10 @@ class Phial extends \Silex\Application
      */
     protected function registerSchemas()
     {
+        $this['user_table'] = static::USER_TABLE;
         $this['user_schema_class'] = __NAMESPACE__ . '\\Schema\\UserSchema';
         $this['user_schema'] = $this->share(function($app) {
-            return new Schema\UserSchema(UserStorage::USER_TABLE);
+            return new Schema\UserSchema($app['user_table']);
         });
 
         $this['schema_manager'] = $this->share(function($app) {

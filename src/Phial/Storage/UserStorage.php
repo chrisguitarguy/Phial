@@ -13,14 +13,15 @@ use Phial\Entity\UserInterface;
 
 class UserStorage extends StorageBase
 {
-    const USER_TABLE = 'users';
+    private $table;
 
     private $entity_class;
 
-    public function __construct(\Doctrine\DBAL\Connection $conn, $entity_class)
+    public function __construct(\Doctrine\DBAL\Connection $conn, $entity_class, $table)
     {
         $this->setConnection($conn);
         $this->entity_class = $entity_class;
+        $this->table = $table;
     }
 
     public function save(UserInterface $user)
@@ -48,7 +49,7 @@ class UserStorage extends StorageBase
         }
 
         return $this->getConnection()->update(
-            static::USER_TABLE,
+            $this->table,
             $to_save,
             array(
                 'user_id'   => $user['user_id'],
@@ -77,7 +78,7 @@ class UserStorage extends StorageBase
             }
         }
 
-        return $this->getConnection()->insert(static::USER_TABLE, $to_save, $binding);
+        return $this->getConnection()->insert($this->table, $to_save, $binding);
     }
 
     public function delete(UserInterface $user)
@@ -86,7 +87,7 @@ class UserStorage extends StorageBase
             throw new \InvalidArgumentException('User must have a user_id value to delete');
         }
 
-        return $this->getConnection()->delete(static::USER_TABLE, array(
+        return $this->getConnection()->delete($this->table, array(
             'user_id'   => $user['user_id'],
         ), array(
             'user_id'   => 'integer',
@@ -187,7 +188,7 @@ class UserStorage extends StorageBase
     {
         $fields = $this->getFields();
 
-        return 'SELECT ' . implode(', ', array_keys($fields)) . ' FROM ' . static::USER_TABLE;
+        return 'SELECT ' . implode(', ', array_keys($fields)) . ' FROM ' . $this->table;
     }
 
     private function toObject(array $user)
