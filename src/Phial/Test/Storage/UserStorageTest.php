@@ -30,6 +30,19 @@ class UserStorageTest extends StorageTestBase
         );
     }
 
+    public function getByColumnProvider()
+    {
+        return array(
+            array('ID', 'user_id'),
+            array('id', 'user_id'),
+            array('user_id', 'user_id'),
+            array('email', 'user_email'),
+            array('user_email', 'user_email'),
+        );
+    }
+
+    /** Tests **********/
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -101,6 +114,202 @@ class UserStorageTest extends StorageTestBase
         $store = $this->getStore($conn);
 
         call_user_func(array($store, $method), $this->getSavableUser());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testDeleteWithoutId()
+    {
+        $store = $this->getStore();
+
+        $store->delete($this->getUserMock());
+    }
+
+    public function testDeleteGoesWell()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('delete')
+            ->with(
+                $this->equalTo(static::TABLE),
+                $this->arrayHasKey('user_id'),
+                $this->arrayHasKey('user_id')
+            )
+            ->will($this->returnValue(1));
+
+        $store = $this->getStore($conn);
+
+        $this->assertEquals(1, $store->delete($this->getSavableUser()));
+    }
+
+    /**
+     * @expectedException Phial\Exception\UserDeleteException
+     */
+    public function testDeleteThrows()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('delete')
+            ->with(
+                $this->equalTo(static::TABLE),
+                $this->arrayHasKey('user_id'),
+                $this->arrayHasKey('user_id')
+            )
+            ->will($this->throwException(new \Exception('delete fail')));
+
+        $store = $this->getStore($conn);
+
+        $store->delete($this->getSavableUser());
+    }
+
+    /**
+     * @dataProvider getByColumnProvider
+     */
+    public function testGetBy($column, $contains)
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAssoc')
+            ->with(
+                $this->stringContains($contains),
+                $this->arrayHasKey('value'),
+                $this->arrayHasKey('value')
+            )
+            ->will($this->returnValue(array('user_id' => 1)));
+
+        $store = $this->getStore($conn);
+
+        $res = $store->getBy($column, 1); // xxx second argument doesn't matter here
+
+        $this->assertInstanceOf(static::ENTITY, $res);
+    }
+
+    /**
+     * @dataProvider getByColumnProvider
+     */
+    public function testGetByWithRaw($column, $contains)
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAssoc')
+            ->with(
+                $this->stringContains($contains),
+                $this->arrayHasKey('value'),
+                $this->arrayHasKey('value')
+            )
+            ->will($this->returnValue(array('user_id' => 1)));
+
+        $store = $this->getStore($conn);
+
+        $res = $store->getBy($column, 1, true); // xxx second argument doesn't matter here
+
+        $this->assertTrue(is_array($res));
+        $this->assertArrayHasKey('user_id', $res);
+    }
+
+    /**
+     * @dataProvider getByColumnProvider
+     * @expectedException Phial\Exception\UserNotFoundException
+     */
+    public function testGetWithoutResult($column, $contains)
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAssoc')
+            ->with(
+                $this->stringContains($contains),
+                $this->arrayHasKey('value'),
+                $this->arrayHasKey('value')
+            )
+            ->will($this->returnValue(false));
+
+        $store = $this->getStore($conn);
+
+        $res = $store->getBy($column, 1); // xxx second argument doesn't matter here
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetByWithBadColumn()
+    {
+        $store = $this->getStore();
+
+        $store->getBy('bad_column', 'nope');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAllWithBadPage()
+    {
+        $store = $this->getStore();
+
+        $store->all(false, 0);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAllWithBadLimit()
+    {
+        $store = $this->getStore();
+
+        $store->all(false, 1, 'asdf');
+    }
+
+    /**
+     * @expectedException Phial\Exception\NoUsersFoundException
+     */
+    public function testAllNoUsersFound()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAll')
+            ->will($this->returnValue(false));
+
+        $store = $this->getStore($conn);
+
+        $store->all();
+    }
+
+    public function testAllReturnsArray()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAll')
+            ->will($this->returnValue(array(
+                array('user_id' => 1),
+                array('user_id' => 2),
+            )));
+
+        $store = $this->getStore($conn);
+
+        $res = $store->all();
+
+        $this->assertTrue(is_array($res));
+        $this->assertCount(2, $res);
+        $this->assertInstanceOf(static::ENTITY, $res[0]);
+    }
+
+    public function testAllReturnsArrayWithRaw()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->once())
+            ->method('fetchAll')
+            ->will($this->returnValue(array(
+                array('user_id' => 1),
+                array('user_id' => 2),
+            )));
+
+        $store = $this->getStore($conn);
+
+        $res = $store->all(true);
+
+        $this->assertTrue(is_array($res));
+        $this->assertCount(2, $res);
+        $this->assertTrue(is_array($res[0]));
     }
 
     private function getStore(\Doctrine\DBAL\Connection $conn=null)
