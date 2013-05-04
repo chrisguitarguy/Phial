@@ -95,11 +95,18 @@ class UserStorage extends StorageBase
             throw new \InvalidArgumentException('User must have a user_id value to delete');
         }
 
-        return $this->getConnection()->delete($this->table, array(
-            'user_id'   => $user['user_id'],
-        ), array(
-            'user_id'   => 'integer',
-        ));
+        try {
+            return $this->getConnection()->delete($this->table, array(
+                'user_id'   => $user['user_id'],
+            ), array(
+                'user_id'   => 'integer',
+            ));
+        } catch (\Exception $e) {
+            throw new \Phial\Exception\UserDeleteException(
+                'Caught exception deleting user: ' . $e->getMessage(),
+                $e
+            );
+        }
     }
 
     public function getBy($column, $value, $raw=false)
