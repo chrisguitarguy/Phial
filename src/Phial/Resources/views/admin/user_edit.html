@@ -1,0 +1,5 @@
+{% extends '@admin/user_form.html' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block admin_user_action %}{{ url('admin.users.edit', {'user_id': user.user_id}) }}{% endblock %}

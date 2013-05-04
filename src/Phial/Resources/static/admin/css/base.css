@@ -8,8 +8,11 @@ td, th {
   padding: 0.5em 1em;
 }
 
-.list-table {
+.admin-content {
   margin-top: 2em;
+}
+
+.list-table {
   width: 100%;
 }
 
@@ -24,4 +27,16 @@ td, th {
 
 .list-table tbody tr:first-child {
   border-top: none;
+}
+
+.form-row {
+  margin-bottom: 1em;
+}
+
+.form-row p {
+  margin-bottom: 0.3em;
+}
+
+.messages-wrap {
+  margin-bottom: 1.5em;
 }

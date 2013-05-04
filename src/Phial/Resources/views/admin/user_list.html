@@ -1,6 +1,8 @@
 {% extends '@admin/user_base.html' %}
 
 {% block admin_content %}
+{{ flash_messages(app.session.getFlashBag()) }}
+
 <table class="list-table">
     <thead>
         <tr>

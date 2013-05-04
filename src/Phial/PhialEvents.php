@@ -12,4 +12,7 @@ namespace Phial;
 final class PhialEvents
 {
     const GET_TEMPLATE          = 'phial.get_template';
+
+    // users
+    const USERS_ALTER_FORM      = 'phial.users.alter_form';
 }

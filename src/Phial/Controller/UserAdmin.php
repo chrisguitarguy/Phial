@@ -10,6 +10,11 @@
 namespace Phial\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormInterface;
+use Phial\Entity;
+use Phial\Form;
+use Phial\Event;
+use Phial\PhialEvents;
 
 /**
  * Controller for the user admin area.
@@ -42,16 +47,108 @@ class UserAdmin extends Controller
 
     public function newAction(Request $r)
     {
-        
+        $user = new Entity\User();
+
+        $form = $this->getEditForm($user, true);
+
+        if ('POST' === $r->getMethod()) {
+            $user_id = $this->saveUser($form, $user, $r, true);
+
+            if ($user_id) {
+                return $this->redirectList();
+            }
+        }
+
+        return $this->render('@admin/user_form.html', array(
+            'user'  => $user,
+            'form'  => $form->createView(),
+        ));
     }
 
     public function editAction($user_id, Request $r)
     {
-        
+        $user = $this->storage->getBy('id', $user_id);
+
+        $form = $this->getEditForm($user, false);
+
+        if ('POST' === $r->getMethod()) {
+            $user_id = $this->saveUser($form, $user, $r);
+
+            if ($user_id) {
+                return $this->redirectList();
+            }
+        }
+
+        return $this->render('@admin/user_edit.html', array(
+            'user'  => $user,
+            'form'  => $form->createView(),
+        ));
     }
 
     public function deleteAction($user_id, Request $r)
     {
         
+    }
+
+    private function getEditForm(Entity\UserInterface $user, $new=false)
+    {
+        $builder = $this->app['form.factory']->createBuilder(new Form\UserEditType($new), $user);
+
+        $event = new Event\AlterFormEvent($builder, $new ? 'new' : 'edit');
+
+        $this->app['dispatcher']->dispatch(PhialEvents::USERS_ALTER_FORM, $event);
+
+        return $event->getBuilder()->getForm();
+    }
+
+    private function saveUser(FormInterface $form, Entity\UserInterface $user, Request $r, $new=false)
+    {
+        $form->bind($r);
+
+        if (!$form->isValid()) {
+            return false;
+        }
+
+        $data = $form->getData();
+
+        if (!empty($data['new_password'])) {
+            // they entered one.
+            $_password = isset($data['new_password_a']) ? $data['new_password_a'] : false;
+
+            if ($data['new_password'] === $_password) {
+                $user['user_pass'] = $data['new_password'];
+            } else {
+                $this->flash('danger', 'Passwords must match.');
+                return false;
+            }
+        }
+
+        $user_id = false;
+
+        try {
+            if ($new) {
+                $user_id = $this->storage->create($user);
+            } else {
+                $user_id = $this->storage->save($user);
+            }
+        } catch (\Phial\Exception\EmailExistsException $e) {
+            $this->flash('danger', 'That email is already in use.');
+        } catch (\Phial\Exception\PhialException $e) {
+            $this->flash('danger', 'Something when wrong. Try again?');
+        }
+
+        if ($user_id) {
+            $this->flash('success', 'User saved.');
+        }
+
+        return $user_id;
+    }
+
+    private function redirectList()
+    {
+        return $this->app->redirect(
+            $this->url('admin.users.list'),
+            303
+        );
     }
 }

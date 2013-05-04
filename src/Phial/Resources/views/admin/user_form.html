@@ -1,0 +1,25 @@
+{% extends '@admin/user_base.html' %}
+
+{% form_theme form '@forms/gumby_forms.html' %}
+
+{% block title %}New User{% endblock %}
+
+{% block admin_content %}
+
+{{ flash_messages(app.session.getFlashBag()) }}
+
+<form class="form admin-form"
+    method="post"
+    action="{% block admin_user_action %}{{ url('admin.users.new') }}{% endblock %}"
+    {{ form_enctype(form) }}>
+
+    {{ form_widget(form) }}
+
+    <div class="row">
+        <div class="btn large success">
+            <button type="submit">{% block admin_user_save %}Save{% endblock %}</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
