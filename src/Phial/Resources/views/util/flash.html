@@ -1,0 +1,9 @@
+{% if all_messages %}
+    <div class="row messages-wrap">
+    {% for code, messages in all_messages %}
+        {% for msg in messages %}
+            <div class="alert {{ code }}">{{ msg }}</div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+{% endif %}

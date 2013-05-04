@@ -99,6 +99,10 @@ class Phial extends \Silex\Application
                 $app['escaper']
             );
         };
+
+        $this['flash_msg_ext'] = function($app) {
+            return new Twig\FlashExtension('@util/flash.html');
+        };
     }
 
     protected function registerProviders()
@@ -141,7 +145,7 @@ class Phial extends \Silex\Application
 
             $twig->addExtension($app['template_tag_ext']);
             $twig->addExtension($app['assetic_func_ext']);
-
+            $twig->addExtension($app['flash_msg_ext']);
 
             return $twig;
         }));
@@ -152,6 +156,8 @@ class Phial extends \Silex\Application
 
                 $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'admin', 'admin');
                 $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'front', 'front');
+                $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'forms', 'forms');
+                $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'util', 'util');
 
                 return $loader;
             })
