@@ -9,6 +9,8 @@
 
 namespace Phial\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Controller for the user admin area.
  *
@@ -31,6 +33,25 @@ class UserAdmin extends Controller
 
     public function listAction()
     {
-        return $this->render('@admin/base.html');
+        $users = $this->storage->all();
+
+        return $this->render('@admin/user_list.html', array(
+            'users'     => $users,
+        ));
+    }
+
+    public function newAction(Request $r)
+    {
+        
+    }
+
+    public function editAction($user_id, Request $r)
+    {
+        
+    }
+
+    public function deleteAction($user_id, Request $r)
+    {
+        
     }
 }
