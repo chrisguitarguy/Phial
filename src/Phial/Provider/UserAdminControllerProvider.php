@@ -22,7 +22,7 @@ class UserAdminControllerProvider extends ControllerProviderBase implements \Sil
             ->method('GET|POST')
             ->bind('admin.users.new');
 
-        $c->match('/users/edit/{user_id}', $this->getController('user.user_admin', 'edit'))
+        $c->match('/users/edit/{user_id}', $this->getController('controller.user_admin', 'edit'))
             ->method('GET|POST')
             ->assert('user_id', '\d+')
             ->bind('admin.users.edit');
