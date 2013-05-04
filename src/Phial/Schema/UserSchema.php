@@ -60,8 +60,16 @@ class UserSchema implements SchemaInterface
             'length'            => 64,
         ));
 
+        $t->addColumn('reset_token', 'string', array(
+            'length'            => 64,
+            'notnull'           => false,
+            'default'           => null,
+        ));
+
         $t->setPrimaryKey(array('user_id'));
 
         $t->addUniqueIndex(array('user_email'), 'users_email_unique');
+
+        $t->addUniqueIndex(array('reset_token'), 'users_reset_unique');
     }
 }

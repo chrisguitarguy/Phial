@@ -41,6 +41,7 @@ class UserSchemaTest extends \PHPUnit_Framework_TestCase
             'display_name'  => 'string',
             'user_pass'     => 'string',
             'user_role'     => 'string',
+            'reset_token'   => 'string',
         );
 
         $count = 0;
@@ -59,7 +60,7 @@ class UserSchemaTest extends \PHPUnit_Framework_TestCase
         $table->expects($this->once())
             ->method('setPrimaryKey');
 
-        $table->expects($this->once())
+        $table->expects($this->exactly(2))
             ->method('addUniqueIndex');
 
         $users = new UserSchema(static::TABLE);
