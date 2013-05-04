@@ -36,6 +36,6 @@ class AlterFormEvent extends \Symfony\Component\EventDispatcher\Event
 
     public function getContext()
     {
-        return $this->contest;
+        return $this->context;
     }
 }
