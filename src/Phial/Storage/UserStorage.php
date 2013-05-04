@@ -132,7 +132,7 @@ class UserStorage extends StorageBase
     public function all($raw=false, $page=1, $limit=100)
     {
         $page = abs(intval($page));
-        $limit = abs(intval($page));
+        $limit = abs(intval($limit));
 
         if ($page < 1) {
             throw new \InvalidArgumentException('Page must be >= 1');
