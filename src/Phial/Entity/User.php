@@ -25,6 +25,10 @@ class User extends EntityBase implements UserInterface
 
     public function hasRole($role)
     {
+        if ('loggedin' === $role) {
+            return $this->loggedIn();
+        }
+
         return !empty($this['user_role']) && $role === $this['user_role'];
     }
 

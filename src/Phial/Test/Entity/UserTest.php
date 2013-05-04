@@ -26,6 +26,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->getUser();
 
+        $this->assertTrue($user->hasRole('loggedin'));
+
         $this->assertFalse($user->hasRole('admin'));
 
         $user['user_role'] = 'admin';
