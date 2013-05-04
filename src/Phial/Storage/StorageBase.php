@@ -45,6 +45,10 @@ abstract class StorageBase
             return;
         }
 
+        // so we don't have to do this everywhere, put a special variable
+        // in the context for the name of the calling class.
+        $ctx['name'] = get_class($this);
+
         $logger->log($level, $msg, $ctx);
     }
 }
