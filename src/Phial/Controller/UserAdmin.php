@@ -112,6 +112,7 @@ class UserAdmin extends Controller
 
         $res = false;
         try {
+            $this->app['dispatcher']->dispatch(PhialEvents::USERS_DELETE, new Event\AlterUserEvent($user, $r));
             $res = $this->storage->delete($user);
         } catch (\Phial\Exception\PhialException $e) {
             // pass
@@ -172,11 +173,18 @@ class UserAdmin extends Controller
 
         $user_id = false;
 
+        $event = new Event\AlterUserEvent($user, $r);
+        $dispatcher = $this->app['dispatcher'];
+
         try {
             if ($new) {
+                $dispatcher->dispatch(PhialEvents::USERS_PRE_CREATE, $event);
                 $user_id = $this->storage->create($user);
+                $dispatcher->dispatch(PhialEvents::USERS_POST_CREATE, $event);
             } else {
+                $dispatcher->dispatch(PhialEvents::USERS_PRE_SAVE, $event);
                 $user_id = $this->storage->save($user);
+                $dispatcher->dispatch(PhialEvents::USERS_POST_SAVE, $event);
             }
         } catch (\Phial\Exception\EmailExistsException $e) {
             $this->flash('danger', 'That email is already in use.');
