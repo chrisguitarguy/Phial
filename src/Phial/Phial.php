@@ -272,8 +272,16 @@ class Phial extends \Silex\Application
             return $app['init_controller']($c);
         };
 
+        $this['controller.account_class'] = __NAMESPACE__ . '\\Controller\\Account';
+        $this['controller.account'] = function($app) {
+            $c = new $app['controller.account_class']();
+
+            return $app['init_controller']($c);
+        };
+
         $this->mount('/admin', new Provider\UserAdminControllerProvider());
         $this->mount('/admin', new Provider\AdminControllerProvider());
+        $this->mount('/account', new Provider\AccountControllerProvider());
     }
 
     protected function registerStorage()
