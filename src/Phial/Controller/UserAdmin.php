@@ -92,7 +92,7 @@ class UserAdmin extends Controller
 
     private function getEditForm(Entity\UserInterface $user, $new=false)
     {
-        $builder = $this->app['form.factory']->createBuilder(new Form\UserEditType($new), $user);
+        $builder = $this->app['form.factory']->createBuilder(new Form\EditUserType($new), $user);
 
         $event = new Event\AlterFormEvent($builder, $new ? 'new' : 'edit');
 

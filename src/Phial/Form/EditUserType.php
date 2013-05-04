@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @since   0.1
  * @author  Christopher Davis <http://christopherdavis.me>
  */
-class UserEditType extends \Symfony\Component\Form\AbstractType
+class EditUserType extends \Symfony\Component\Form\AbstractType
 {
     /**
      * Is this for a new user?
