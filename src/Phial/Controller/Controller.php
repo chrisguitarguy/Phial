@@ -20,114 +20,52 @@ abstract class Controller
     /**
      * @since   0.1
      * @access  protected
-     * @var     Twig_Environment
+     * @var     \Phial\Phial
      */
-    protected $twig = null;
+    protected $app = null;
 
-    /**
-     * @since   0.1
-     * @access  protected
-     * @var     Psr\Log\LoggerInterface
-     */
-    protected $logger = null;
-
-    /**
-     * @since   0.1
-     * @access  protected
-     * @var     Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    protected $dispatcher = null;
-
-    /**
-     * @since   0.1
-     * @access  protected
-     * @var     Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-
-    /**
-     * @since   0.1
-     * @access  protected
-     * @var     Symfony\Component\Form\FormFactoryInterface
-     */
-    protected $forms;
-
-    public function setTwig(\Twig_Environment $twig)
+    public function setApplication(\Phial\Phial $app)
     {
-        $this->twig = $twig;
+        $this->app = $app;
         return $this;
     }
 
-    public function getTwig()
+    public function getApplication()
     {
-        return $this->twig;
-    }
-
-    public function setLogger(\Psr\Log\LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    public function setDispatcher(\Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-        return $this;
-    }
-
-    public function getDispatcher()
-    {
-        return $this->dispatcher;
-    }
-
-    public function setRequest(\Symfony\Component\HttpFoundation\Request $request)
-    {
-        $this->request = $request;
-        return $this;
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    public function setForms(\Symfony\Component\Form\FormFactoryInterface $forms)
-    {
-        $this->forms = $forms;
-        return $this;
-    }
-
-    public function getForms()
-    {
-        return $this->forms;
+        return $this->app;
     }
 
     protected function render($template, array $ctx=array())
     {
-        $twig = $this->getTwig();
+        $twig = $this->app['twig'];
 
-        if (!$twig) {
-            throw new \RuntimeException('Twig_Environment is not set');
+        $request = false;
+        try {
+            $request = $this->app['request'];
+        } catch (\Exception $e) {
+            // pass
         }
 
-        $request = $this->getRequest();
         $route = $request ? $request->attributes->get('_route') : null;
 
-        $dispatcher = $this->getDispatcher();
-
-        if ($route && $dispatcher) {
+        if ($route) {
             $event = new \Phial\Event\GetTemplateEvent($route, $template);
 
-            $dispatcher->dispatch(\Phial\PhialEvents::GET_TEMPLATE, $event);
+            $this->app['dispatcher']->dispatch(\Phial\PhialEvents::GET_TEMPLATE, $event);
 
             $template = $event->getTemplate();
         }
 
         return $twig->render($template, $ctx);
+    }
+
+    public function url($route, array $ctx=array())
+    {
+        return $this->app['url_generator']->generate($route, $ctx);
+    }
+
+    protected function flash($code, $msg)
+    {
+        $this->app['session']->getFlashBag()->add($code, $msg);
     }
 }

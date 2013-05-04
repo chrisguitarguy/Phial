@@ -257,11 +257,7 @@ class Phial extends \Silex\Application
         $app = $this;
 
         $this['init_controller'] = $this->protect(function(\Phial\Controller\Controller $c) use ($app) {
-            $c->setTwig($app['twig'])
-                ->setLogger($app['monolog'])
-                ->setDispatcher($app['dispatcher'])
-                ->setRequest($app['request'])
-                ->setForms($app['form.factory']);
+            $c->setApplication($app);
 
             return $c;
         });
