@@ -41,7 +41,7 @@ class UserStorage extends StorageBase
             if (isset($user[$col])) {
                 $to_save[$col] = $user[$col];
 
-                if (is_null($col)) {
+                if (is_null($to_save[$col])) {
                     $binding[$col] = \PDO::PARAM_NULL;
                 } else {
                     $binding[$col] = $bind;
@@ -67,7 +67,7 @@ class UserStorage extends StorageBase
 
             $this->throwSaveException($e);
         }
-    }
+    } // pragma nocover
 
     public function create(UserInterface $user)
     {
@@ -81,7 +81,7 @@ class UserStorage extends StorageBase
             if (isset($user[$col])) {
                 $to_save[$col] = $user[$col];
 
-                if (is_null($user[$col])) {
+                if (is_null($to_save[$col])) {
                     $binding[$col] = \PDO::PARAM_NULL;
                 } else {
                     $binding[$col] = $bind;
@@ -100,7 +100,7 @@ class UserStorage extends StorageBase
 
             $this->throwSaveException($e);
         }
-    }
+    } // pragma nocover
 
     public function delete(UserInterface $user)
     {
