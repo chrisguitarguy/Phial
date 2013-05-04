@@ -16,7 +16,30 @@ class SchemaManager
 {
     const VER = 1;
 
-    protected $schemas;
+    protected $schemas = array();
+
+    /**
+     * @since   0.1
+     * @access  protected
+     * @var     Doctrine\DBAL\Schema\Schema
+     */
+    protected $schema;
+
+    public function __construct(\Doctrine\DBAL\Schema\Schema $s)
+    {
+        $this->setDoctrineSchema($s);
+    }
+
+    public function setDoctrineSchema(\Doctrine\DBAL\Schema\Schema $s)
+    {
+        $this->schema = $s;
+        return $this;
+    }
+
+    public function getDoctrineSchema()
+    {
+        return $this->schema;
+    }
 
     public function addSchema($name, SchemaInterface $schema)
     {
@@ -36,21 +59,21 @@ class SchemaManager
 
     public function getInstallSql(AbstractPlatform $platform)
     {
-        $schema = $this->getSchemaObject();
+        $schema = $this->getLoadedSchema();
 
         return $schema->toSql($platform);
     }
 
     public function getMigrateSql(Schema $from, AbstractPlatform $platform)
     {
-        $to = $this->getSchemaObject();
+        $to = $this->getLoadedSchema();
 
         return $from->getMigrateToSql($to, $platform);
     }
 
-    protected function getSchemaObject()
+    protected function getLoadedSchema()
     {
-        $schema = new Schema();
+        $schema = $this->getDoctrineSchema();
 
         $this->loadAllTables($schema);
 

@@ -222,6 +222,10 @@ class Phial extends \Silex\Application
      */
     protected function registerSchemas()
     {
+        $this['schema_object'] = $this->share(function() {
+            return new \Doctrine\DBAL\Schema\Schema();
+        });
+
         $this['user_table'] = static::USER_TABLE;
         $this['user_schema_class'] = __NAMESPACE__ . '\\Schema\\UserSchema';
         $this['user_schema'] = $this->share(function($app) {
@@ -229,7 +233,7 @@ class Phial extends \Silex\Application
         });
 
         $this['schema_manager'] = $this->share(function($app) {
-            $manager = new Schema\SchemaManager();
+            $manager = new Schema\SchemaManager($app['schema_object']);
 
             $manager->addSchema('users', $app['user_schema']);
 
