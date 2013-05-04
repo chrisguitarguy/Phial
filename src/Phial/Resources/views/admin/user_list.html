@@ -1,0 +1,39 @@
+{% extends '@admin/user_base.html' %}
+
+{% block admin_content %}
+<table class="list-table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.user_email }}</td>
+            <td>{{ user.display_name }}</td>
+            <td>{{ user.user_role }}</td>
+            <td>
+                <div class="btn small primary">
+                    <a href="{{ url('admin.users.edit', {'user_id': user.user_id}) }}">Edit</a>
+                </div>
+                <div class="btn small danger">
+                    <a href="{{ url('admin.users.delete', {'user_id': user.user_id}) }}">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </tfoot>
+</table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends '@admin/base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block admin_title %}Users{% endblock %}
+
+{% block admin_after_title %}
+<div class="medium btn primary">
+    <a href="{{ url('admin.users.list') }}">All Users</a>
+</div>
+<div class="medium btn primary">
+    <a href="{{ url('admin.users.new') }}">New User</a>
+</div>
+{% endblock %}

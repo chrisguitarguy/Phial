@@ -1,46 +1,59 @@
 <!DOCTYPE html>
 <html {{ language_attributes() }}>
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{{ app.site_name }} Admin{% endblock %}</title>
     {% block head_meta -%}
         <meta name="robots" content="noindex,follow" />
     {% endblock %}
 
+    {% block stylesheets %}
+        <link href="{{ asset('phial_admin_css') }}" type="text/css" rel="stylesheet" />
+    {% endblock %}
 
-    <link href="{{ asset('phial_admin_css') }}" type="text/css" rel="stylesheet" />
-    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('phial_admin_js') }}"></script>
+    {% endblock %}
 
-    <script type="text/javascript" src="{{ asset('phial_admin_js') }}"></script>
-    {% block javascripts %}{% endblock %}
-
+    {% block head_extra %}{% endblock %}
 </head>
 <body {{ body_class('admin') }}>
 
-<div class="admin-bar">
-    <div class="pad">
-
-        <div class="bar-item">
+<nav class="navbar">
+    <ul>
+        <li>
             <a href="{{ url('admin') }}">{{ app.site_name }}</a>
-        </div>
+        </li>
 
-        <div class="bar-item">
+        <li>
             <a href="{{ url('admin.users.list') }}">Users</a>
-        </div>
+        </li>
+    </ul>
+</nav>
 
-    </div>
-</div>
+<div class="container">
 
-<header class="admin-header">
-    <div class="outer-wrap">
-        <div class="inner-wrap">
-
+    <header class="admin-header row">
+        <div class="fourteen columns">
             <h1 class="admin-title">{% block admin_title %}{{ app.site_name }} Admin{% endblock %}</h1>
 
             {% block admin_after_title %}{% endblock %}
-
         </div>
-    </div>
-</header>
+    </header>
 
+    <div class="row">
+        {% block admin_content %}{% endblock %}
+    </div>
+
+    <footer class="admin-footer row">
+        {% block footer_content %}
+        <p>
+            Powered by Phial. A <a href="http://christopherdavis.me" rel="nofollow external">Christopher Davis</a> thing.
+        </p>
+        {% endblock %}
+    </footer>
+
+</div>
+
+{% block footer_extra %}{% endblock %}
 </body>
 </html>
