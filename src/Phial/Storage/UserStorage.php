@@ -48,14 +48,18 @@ class UserStorage extends StorageBase
             }
         }
 
-        return $this->getConnection()->update(
-            $this->table,
-            $to_save,
-            array(
-                'user_id'   => $user['user_id'],
-            ),
-            $binding
-        );
+        try {
+            return $this->getConnection()->update(
+                $this->table,
+                $to_save,
+                array(
+                    'user_id'   => $user['user_id'],
+                ),
+                $binding
+            );
+        } catch (\Exception $e) {
+            $this->throwSaveException($e);
+        }
     }
 
     public function create(UserInterface $user)
@@ -78,7 +82,11 @@ class UserStorage extends StorageBase
             }
         }
 
-        return $this->getConnection()->insert($this->table, $to_save, $binding);
+        try {
+            return $this->getConnection()->insert($this->table, $to_save, $binding);
+        } catch (\Exception $e) {
+            $this->throwSaveException($e);
+        }
     }
 
     public function delete(UserInterface $user)
@@ -194,5 +202,33 @@ class UserStorage extends StorageBase
     private function toObject(array $user)
     {
         return new $this->entity_class($user);
+    }
+
+    private function throwSaveException(\Exception $e)
+    {
+        $err_code = 0;
+
+        $prev = $e->getPrevious();
+
+        if ($prev) {
+            $err_code = $prev->getCode();
+        }
+
+        switch($err_code) {
+            case '23505':
+            case 23505:
+                throw new \Phial\Exception\EmailExistsException(
+                    'That email is already in use.',
+                    $e,
+                    23505
+                );
+                break;
+            default:
+                throw new \Phial\Exception\UserSaveException(
+                    'Caught exception creating user: ' . $e->getMessage(),
+                    $e
+                );
+                break;
+        }
     }
 }
