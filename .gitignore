@@ -3,6 +3,7 @@
 /composer.lock
 /log
 /cache
+/coverage
 /public*
 !/public/index.php
 
