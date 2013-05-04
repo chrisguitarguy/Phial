@@ -132,6 +132,13 @@ class Phial extends \Silex\Application
         $this['twig'] = $this->share($this->extend('twig', function($twig, $app) {
             $twig->addGlobal('site_name', $app['site_name']);
 
+            try {
+                $current = $app['request']->attributes->get('_route');
+            } catch (\Exception $e) {
+                $current = '';
+            }
+            $twig->addGlobal('current_route', $current);
+
             $twig->addExtension($app['template_tag_ext']);
             $twig->addExtension($app['assetic_func_ext']);
 
