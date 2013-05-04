@@ -19,6 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class DeleteUserType extends \Symfony\Component\Form\AbstractType
 {
+    const NAME = 'user_delete';
+
     /**
      * From Symfony\Component\Form\FormTypeInterface
      *
@@ -43,6 +45,6 @@ class DeleteUserType extends \Symfony\Component\Form\AbstractType
      */
     public function getName()
     {
-        return 'user_delete';
+        return static::NAME;
     }
 }

@@ -19,6 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class EditUserType extends \Symfony\Component\Form\AbstractType
 {
+    const NAME = 'user_edit';
+
     /**
      * Is this for a new user?
      *
@@ -94,6 +96,6 @@ class EditUserType extends \Symfony\Component\Form\AbstractType
      */
     public function getName()
     {
-        return 'user_edit';
+        return static::NAME;
     }
 }
