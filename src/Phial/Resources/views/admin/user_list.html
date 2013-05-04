@@ -19,12 +19,22 @@
             <td>{{ user.display_name }}</td>
             <td>{{ user.user_role }}</td>
             <td>
+
                 <div class="btn small primary">
                     <a href="{{ url('admin.users.edit', {'user_id': user.user_id}) }}">Edit</a>
                 </div>
-                <div class="btn small danger">
-                    <a href="{{ url('admin.users.delete', {'user_id': user.user_id}) }}">Delete</a>
-                </div>
+
+                <form method="post"
+                    action="{{ url('admin.users.delete', {'user_id': user.user_id}) }}"
+                    class="action-form"
+                    {{ form_enctype(user.delete) }}>
+
+                    {{ form_widget(user.delete) }}
+                    <div class="btn small danger">
+                        <button type="submit">Delete</a>
+                    </div>
+                </form>
+
             </td>
         </tr>
         {% endfor %}

@@ -40,3 +40,14 @@ td, th {
 .messages-wrap {
   margin-bottom: 1.5em;
 }
+
+.action-form {
+  margin-bottom: 0;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+.action-form button[type="submit"] {
+  padding: 0 10px;
+}

@@ -40,6 +40,10 @@ class UserAdmin extends Controller
     {
         $users = $this->storage->all();
 
+        foreach ($users as $user) {
+            $user['delete'] = $this->getDeleteForm($user)->createView();
+        }
+
         return $this->render('@admin/user_list.html', array(
             'users'     => $users,
         ));
@@ -87,7 +91,39 @@ class UserAdmin extends Controller
 
     public function deleteAction($user_id, Request $r)
     {
-        
+        $user = $this->storage->getBy('id', $user_id);
+
+        if ($user['user_id'] == $this->app['current_user']['user_id']) {
+            $this->flash('danger', "You can't delete yourself!");
+            return $this->redirectList();
+        }
+
+        $form = $this->getDeleteForm($user);
+
+        $form->bind($r);
+
+        if (!$form->isValid()) {
+            foreach ($form->getErrors() as $err) {
+                $this->flash('danger', $err->getMessage());
+            }
+
+            return $this->redirectList();
+        }
+
+        $res = false;
+        try {
+            $res = $this->storage->delete($user);
+        } catch (\Phial\Exception\PhialException $e) {
+            // pass
+        }
+
+        if ($res) {
+            $this->flash('success', 'User deleted.');
+        } else {
+            $this->flash('danger', 'Error deleting user.');
+        }
+
+        return $this->redirectList();
     }
 
     private function getEditForm(Entity\UserInterface $user, $new=false)
@@ -95,6 +131,17 @@ class UserAdmin extends Controller
         $builder = $this->app['form.factory']->createBuilder(new Form\EditUserType($new), $user);
 
         $event = new Event\AlterFormEvent($builder, $new ? 'new' : 'edit');
+
+        $this->app['dispatcher']->dispatch(PhialEvents::USERS_ALTER_FORM, $event);
+
+        return $event->getBuilder()->getForm();
+    }
+
+    private function getDeleteForm(Entity\UserInterface $user)
+    {
+        $builder = $this->app['form.factory']->createBuilder(new Form\DeleteUserType($new), $user);
+
+        $event = new Event\AlterFormEvent($builder, 'delete');
 
         $this->app['dispatcher']->dispatch(PhialEvents::USERS_ALTER_FORM, $event);
 
