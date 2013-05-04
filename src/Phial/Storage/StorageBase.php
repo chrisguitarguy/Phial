@@ -37,7 +37,7 @@ abstract class StorageBase
         return $this->logger;
     }
 
-    protected function log($level, $msg, array $ctx=array())
+    public function log($level, $msg, array $ctx=array())
     {
         $logger = $this->getLogger();
 
