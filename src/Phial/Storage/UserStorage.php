@@ -146,6 +146,11 @@ class UserStorage extends StorageBase
             case 'user_email':
                 $column = 'user_email';
                 break;
+            case 'reset':
+            case 'reset_token':
+            case 'token':
+                $column = 'reset_token';
+                break;
             default:
                 throw new \InvalidArgumentException(sprintf('Cannot fetch users by "%s"', $column));
                 break;
@@ -214,6 +219,7 @@ class UserStorage extends StorageBase
 
     private function getFields()
     {
+        // xxx maybe this should be in the schema object?
         return array(
             'user_id'       => 'integer',
             'user_email'    => 'string',
@@ -222,6 +228,7 @@ class UserStorage extends StorageBase
             'display_name'  => 'string',
             'user_pass'     => 'string',
             'user_role'     => 'string',
+            'reset_token'   => 'string',
         );
     }
 

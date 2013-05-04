@@ -38,6 +38,9 @@ class UserStorageTest extends StorageTestBase
             array('user_id', 'user_id'),
             array('email', 'user_email'),
             array('user_email', 'user_email'),
+            array('token', 'reset_token'),
+            array('reset_token', 'reset_token'),
+            array('reset', 'reset_token'),
         );
     }
 
