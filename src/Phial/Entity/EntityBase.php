@@ -37,15 +37,13 @@ abstract class EntityBase implements \ArrayAccess
             return $this->storage[$key];
         }
 
-        $this->sendWarning($key);
+        return null;
     }
 
     public function offsetUnset($key)
     {
         if ($this->offsetExists($key)) {
             unset($this->storage[$key]);
-        } else {
-            $this->sendWarning($key);
         }
     }
 
@@ -73,14 +71,6 @@ abstract class EntityBase implements \ArrayAccess
 
     public function __set($key, $val)
     {
-        return $this->offsetSet($key);
-    }
-
-    private function sendWarning($key)
-    {
-        trigger_error(
-            sprintf('"%s" does not not have key "%s"', get_class($this), $key),
-            E_USER_NOTICE
-        );
+        return $this->offsetSet($key, $val);
     }
 }
