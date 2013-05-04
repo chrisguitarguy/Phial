@@ -61,6 +61,8 @@ class Phial extends \Silex\Application
 
         $this->registerSchemas();
 
+        $this->registerStorage();
+
         $this->registerControllers();
 
         $this['current_user'] = $this->share(function($app) {
@@ -72,16 +74,6 @@ class Phial extends \Silex\Application
             } else {
                 return new Entity\AnonymousUser();
             }
-        });
-
-        $this['users_class'] = __NAMESPACE__ . '\\Storage\\UserStorage';
-        $this['user_entity_class'] = __NAMESPACE__ . '\\Entity\\User';
-        $this['users'] = $this->share(function($app) {
-            return new $app['users_class'](
-                $app['db'],
-                $app['user_entity_class'],
-                $app['user_table']
-            );
         });
 
         $this['escaper_class'] = __NAMESPACE__ . '\\Escaper';
@@ -278,5 +270,24 @@ class Phial extends \Silex\Application
 
         $this->mount('/admin', new Provider\UserAdminControllerProvider());
         $this->mount('/admin', new Provider\AdminControllerProvider());
+    }
+
+    protected function registerStorage()
+    {
+        $this['users_class'] = __NAMESPACE__ . '\\Storage\\UserStorage';
+        $this['user_entity_class'] = __NAMESPACE__ . '\\Entity\\User';
+        $this['users'] = $this->share(function($app) {
+            $users = new $app['users_class'](
+                $app['db'],
+                $app['user_entity_class'],
+                $app['user_table']
+            );
+
+            if (isset($app['monolog'])) {
+                $users->setLogger($app['monolog']);
+            }
+
+            return $users;
+        });
     }
 }

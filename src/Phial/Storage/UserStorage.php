@@ -10,6 +10,7 @@
 namespace Phial\Storage;
 
 use Phial\Entity\UserInterface;
+use Psr\Log\LogLevel;
 
 class UserStorage extends StorageBase
 {
@@ -58,6 +59,12 @@ class UserStorage extends StorageBase
                 $binding
             );
         } catch (\Exception $e) {
+            $this->log(
+                LogLevel::EMERGENCY,
+                '{name}:  caught exception saving user {msg}',
+                array('msg' => $e->getMessage())
+            );
+
             $this->throwSaveException($e);
         }
     }
@@ -85,6 +92,12 @@ class UserStorage extends StorageBase
         try {
             return $this->getConnection()->insert($this->table, $to_save, $binding);
         } catch (\Exception $e) {
+            $this->log(
+                LogLevel::EMERGENCY,
+                '{name}:  caught exception creating user {msg}',
+                array('msg' => $e->getMessage())
+            );
+
             $this->throwSaveException($e);
         }
     }
@@ -102,6 +115,12 @@ class UserStorage extends StorageBase
                 'user_id'   => 'integer',
             ));
         } catch (\Exception $e) {
+            $this->log(
+                LogLevel::EMERGENCY,
+                '{name}:  caught exception deleting user {msg}',
+                array('msg' => $e->getMessage())
+            );
+
             throw new \Phial\Exception\UserDeleteException(
                 'Caught exception deleting user: ' . $e->getMessage(),
                 $e
