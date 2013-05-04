@@ -68,7 +68,7 @@ class Phial extends \Silex\Application
         $this['current_user'] = $this->share(function($app) {
             if (
                 ($user_id = $app['session']->get('user_id')) &&
-                ($user = $app['users']->getById($user_id))
+                ($user = $app['users']->getBy('id', $user_id))
             ) {
                 return $user;
             } else {
