@@ -41,8 +41,8 @@ abstract class StorageBase
     {
         $logger = $this->getLogger();
 
-        if ($logger) {
-            return;
+        if (!$logger) {
+            return false;
         }
 
         // so we don't have to do this everywhere, put a special variable
@@ -50,5 +50,7 @@ abstract class StorageBase
         $ctx['name'] = get_class($this);
 
         $logger->log($level, $msg, $ctx);
+
+        return true;
     }
 }
