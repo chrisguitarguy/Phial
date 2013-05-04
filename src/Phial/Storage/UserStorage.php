@@ -50,7 +50,7 @@ class UserStorage extends StorageBase
         }
 
         try {
-            return $this->getConnection()->update(
+            $res = $this->getConnection()->update(
                 $this->table,
                 $to_save,
                 array(
@@ -67,7 +67,9 @@ class UserStorage extends StorageBase
 
             $this->throwSaveException($e);
         }
-    } // pragma nocover
+
+        return $res;
+    }
 
     public function create(UserInterface $user)
     {
@@ -90,7 +92,7 @@ class UserStorage extends StorageBase
         }
 
         try {
-            return $this->getConnection()->insert($this->table, $to_save, $binding);
+            $res = $this->getConnection()->insert($this->table, $to_save, $binding);
         } catch (\Exception $e) {
             $this->log(
                 LogLevel::EMERGENCY,
@@ -100,7 +102,9 @@ class UserStorage extends StorageBase
 
             $this->throwSaveException($e);
         }
-    } // pragma nocover
+
+        return $res;
+    }
 
     public function delete(UserInterface $user)
     {
@@ -109,7 +113,7 @@ class UserStorage extends StorageBase
         }
 
         try {
-            return $this->getConnection()->delete($this->table, array(
+            $res = $this->getConnection()->delete($this->table, array(
                 'user_id'   => $user['user_id'],
             ), array(
                 'user_id'   => 'integer',
@@ -126,6 +130,8 @@ class UserStorage extends StorageBase
                 $e
             );
         }
+
+        return $res;
     }
 
     public function getBy($column, $value, $raw=false)
@@ -137,6 +143,7 @@ class UserStorage extends StorageBase
                 $column = 'user_id';
                 break;
             case 'email':
+            case 'user_email':
                 $column = 'user_email';
                 break;
             default:
