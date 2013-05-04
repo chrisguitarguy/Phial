@@ -15,6 +15,8 @@ class UserAdminControllerProvider extends ControllerProviderBase implements \Sil
     {
         $c = $app['controllers_factory'];
 
+        $c->secure('admin');
+
         $c->get('/users', $this->getController('controller.user_admin', 'list'))
             ->bind('admin.users.list');
 

@@ -15,6 +15,8 @@ class AdminControllerProvider extends ControllerProviderBase implements \Silex\C
     {
         $c = $app['controllers_factory'];
 
+        $c->secure('loggedin');
+
         $c->get('/', $this->getController('controller.admin', 'home'))
             ->bind('admin');
 

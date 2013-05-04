@@ -34,6 +34,7 @@ class AccountControllerProvider extends ControllerProviderBase implements \Silex
 
         $c->match('/', $this->getController('controller.account', 'account'))
             ->method('GET|POST')
+            ->secure('loggedin')
             ->bind('account.account');
 
         return $c;

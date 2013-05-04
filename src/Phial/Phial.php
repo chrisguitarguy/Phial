@@ -59,6 +59,8 @@ class Phial extends \Silex\Application
 
         $this->loadConfig();
 
+        $this['route_class'] = __NAMESPACE__ . '\\Route';
+
         $this->registerSchemas();
 
         $this->registerStorage();
