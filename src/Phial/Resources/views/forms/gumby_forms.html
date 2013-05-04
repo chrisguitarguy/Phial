@@ -1,0 +1,25 @@
+{% block form_row %}
+{% spaceless %}
+<div class="row form-row field">
+    <p>{{ form_label(form) }}</p>
+    <p>{{ form_widget(form, {'attr': {'class': 'input' }}) }}</p>
+    {{ form_errors(form) }}
+</div>
+{% endspaceless %}
+{% endblock %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <div class="alert danger">
+        {% for error in errors %}
+            {{
+                error.messagePluralization is null
+                    ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                    : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+            }}
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock %}
