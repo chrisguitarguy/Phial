@@ -20,4 +20,7 @@ final class PhialEvents
     const USERS_PRE_SAVE        = 'phial.users.pre_save';
     const USERS_POST_SAVE       = 'phial.users.post_save';
     const USERS_DELETE          = 'phial.users.delete';
+
+    // accounts
+    const ACCOUNT_ALTER_FORM    = 'phial.account.alter_form';
 }

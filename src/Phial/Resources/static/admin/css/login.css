@@ -1,0 +1,12 @@
+.login-form-wrap {
+  margin-top: 5em;
+  background: white;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.login-form-wrap > .pad {
+  padding: 1.5em;
+}

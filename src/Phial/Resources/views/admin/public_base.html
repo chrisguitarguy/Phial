@@ -1,0 +1,55 @@
+{% extends '@admin/base.html' %}
+
+{% form_theme form '@forms/gumby_forms.html' %}
+
+{% block admin_navbar %}{% endblock %}
+
+{% block admin_header %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style type="text/css">
+        body {
+            background: #fbfbfb;
+        }
+        .admin-footer {
+            border-top: none;
+            margin-top: 5em;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="login-form-wrap columns six push_three">
+    <div class="pad">
+        {% block account_content %}
+
+            {% block account_form_title %}
+            <h3>Login</h3>
+            {% endblock %}
+
+            {{ flash_messages(app.session.getFlashBag()) }}
+
+            <form method="post"
+                class="public-form"
+                action="{% block account_form_action %}{% endblock %}"
+                {{ form_enctype(form) }}>
+
+                {{ form_widget(form) }}
+
+                <div class="field">
+                    {% block account_form_submit %}
+                    <div class="btn medium primary">
+                        <button type="submit">Login</button>
+                    </div>
+                    {% endblock %}
+                </div>
+
+            </form>
+
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
