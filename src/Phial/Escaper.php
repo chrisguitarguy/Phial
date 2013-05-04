@@ -13,7 +13,11 @@ class Escaper
 {
     public function attr($val)
     {
-        return filter_var($val, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        return filter_var(
+            $val,
+            FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+            FILTER_FLAG_ENCODE_HIGH
+        );
     }
 
     public function html($val)
