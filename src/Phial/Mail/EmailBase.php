@@ -68,7 +68,7 @@ abstract class EmailBase implements EmailInterface, \ArrayAccess
         $msg->setBody($this->getHtmlBody(), 'text/html');
 
         if ($txt = $this->getTextBody()) {
-            $msg->addPart($msg, 'text/html');
+            $msg->addPart($msg, 'text/plain');
         }
     }
 
@@ -77,7 +77,7 @@ abstract class EmailBase implements EmailInterface, \ArrayAccess
      */
     public function setFrom($from)
     {
-        $this->from_email = $form;
+        $this->from_email = $from;
         return $this;
     }
 
@@ -158,7 +158,7 @@ abstract class EmailBase implements EmailInterface, \ArrayAccess
      */
     protected function getTextBody()
     {
-        return null;
+        return null; // pragma nocover
     }
 
     /**
