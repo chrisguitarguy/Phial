@@ -217,6 +217,23 @@ class UserStorage extends StorageBase
         return $out;
     }
 
+    public function generateResetToken()
+    {
+        do {
+            $key = sha1($this->generateRandomBytes());
+        } while ($this->resetTokenExists($key));
+
+        return $key;
+    }
+
+    public function resetTokenExists($key)
+    {
+        return $this->getConnection()->fetchColumn(
+            'SELECT 1 FROM ' . $this->table . ' WHERE reset_token = :token',
+            array('token' => $key)
+        );
+    }
+
     private function getFields()
     {
         // xxx maybe this should be in the schema object?
@@ -271,4 +288,60 @@ class UserStorage extends StorageBase
                 break;
         }
     }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * Generate some random bytes.
+     *
+     * Largely copied from ircmaxell/password_compat
+     *
+     * @since   1.1
+     * @access  private
+     * @return  string-ish
+     */
+    private function generateRandomBytes($len=64)
+    {
+        $bytes = '';
+        $valid = false;
+
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $bytes = openssl_random_pseudo_bytes($len);
+            if ($bytes) {
+                $valid = true;
+            }
+        }
+
+        // no openssl
+        if (!$valid && is_readable('/dev/urandom')) {
+            $fh = fopen('/dev/urandom');
+            $read = strlen($bytes);
+
+            while ($read < $len) {
+                $bytes .= fread($fh, $len - $read);
+                $read = strlen($bytes);
+            }
+
+            fclose($fh);
+
+            if ($read >= $len) {
+                $valid = true;
+            }
+        }
+
+        // no /dev/urandom or our lenth isn't there yet.
+        if (!$valid || strlen($bytes) < $len) {
+            $bl = strlen($bytes);
+
+            for ($i = 0; $i < $len; $i++) {
+                if ($i < $bl) {
+                    $bytes[$i] = $bytes[$i] ^ chr(mt_rand(0, 255));
+                } else {
+                    $bytes .= chr(mt_rand(0, 255));
+                }
+            }
+        }
+
+        return $bytes;
+    }
+    // @codeCoverageIgnoreEnd
 }

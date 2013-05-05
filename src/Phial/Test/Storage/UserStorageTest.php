@@ -315,6 +315,21 @@ class UserStorageTest extends StorageTestBase
         $this->assertTrue(is_array($res[0]));
     }
 
+    public function testResetToken()
+    {
+        $conn = $this->getConnectionMock();
+        $conn->expects($this->at(0))
+            ->method('fetchColumn')
+            ->will($this->returnValue(1));
+        $conn->expects($this->at(1))
+            ->method('fetchColumn')
+            ->will($this->returnValue(null));
+
+        $store = $this->getStore($conn);
+
+        $this->assertTrue(is_string($store->generateResetToken()));
+    }
+
     private function getStore(\Doctrine\DBAL\Connection $conn=null)
     {
         if (!$conn) {
