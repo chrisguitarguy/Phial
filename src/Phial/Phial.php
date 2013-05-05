@@ -152,6 +152,7 @@ class Phial extends \Silex\Application
                 $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'front', 'front');
                 $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'forms', 'forms');
                 $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'util', 'util');
+                $loader->addPath($view_dir.DIRECTORY_SEPARATOR.'email', 'email');
 
                 return $loader;
             })
