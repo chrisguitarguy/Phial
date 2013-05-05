@@ -67,6 +67,8 @@ class Phial extends \Silex\Application
 
         $this->registerControllers();
 
+        $this->registerEmails();
+
         $this['current_user'] = $this->share(function($app) {
             if (
                 ($user_id = $app['session']->get('user_id')) &&
@@ -304,5 +306,21 @@ class Phial extends \Silex\Application
 
             return $users;
         });
+    }
+
+    protected function registerEmails()
+    {
+        $this['email.reset_password_class'] = __NAMESPACE__ . '\\Mail\\ResetPasswordEmail';
+        $this['email.reset_password'] = function($app) {
+            return new $app['email.reset_password_class'](
+                $app['admin_email'],
+                $app['twig'],
+                array(
+                    'protocol'  => 'http',
+                    'domain'    => $app['domain'],
+                    'site_name' => $app['site_name'],
+                )
+            );
+        };
     }
 }
