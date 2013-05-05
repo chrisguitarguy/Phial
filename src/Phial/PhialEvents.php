@@ -23,4 +23,5 @@ final class PhialEvents
 
     // accounts
     const ACCOUNT_ALTER_FORM    = 'phial.account.alter_form';
+    const ACCOUNT_ALTER_EMAIL   = 'phial.account.alter_email';
 }
