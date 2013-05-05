@@ -14,12 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Phial\Event;
 use Phial\Form;
 use Phial\PhialEvents;
+use Phial\Mail;
 
 class Account extends Controller
 {
     public function loginAction(Request $r)
     {
-        $form = $this->getLoginForm();
+        $form = $this->getForm(new Form\LoginType(), 'login');
 
         if ('POST' === $r->getMethod()) {
             $form->bind($r);
@@ -48,7 +49,45 @@ class Account extends Controller
 
     public function forgotPasswordAction(Request $r)
     {
-        
+        $form = $this->getForm(new Form\ForgotPasswordType(), 'forgot_password');
+
+        if ('POST' === $r->getMethod()) {
+            $form->bind($r);
+
+            if ($form->isValid()) {
+
+                $data = $form->getData();
+
+                if ($url = $this->generateResetKey($data['email'])) {
+                    $msg = \Swift_Message::newInstance();
+
+                    $email = $this->app['email.reset_password'];
+                    $email['url'] = $url;
+
+                    $email->buildEmail($msg);
+
+                    $msg->setTo($data['email']);
+
+                    $res = false;
+                    try {
+                        $res = $this->sendEmail($msg, 'forgot_password');
+                    } catch (\Exception $e) {
+                        // pass
+                    }
+
+                    if ($res) {
+                        $this->flash('success', 'A password reset email has beent sent.');
+                        return $this->app->redirect($this->url('account.login'), 303);
+                    }
+
+                    $this->flash('warning', 'An error occured sending the password reset email');
+                }
+            }
+        }
+
+        return $this->render('@admin/forgot_password.html', array(
+            'form'  => $form->createView(),
+        ));
     }
 
     public function resetPasswordAction($token, Request $r)
@@ -61,11 +100,22 @@ class Account extends Controller
         
     }
 
-    private function getLoginForm()
+    public function sendEmail(\Swift_Message $msg, $ctx)
     {
-        $builder = $this->app['form.factory']->createBuilder(new Form\LoginType());
+        $event = new Event\AlterEmailEvent($msg, $ctx);
 
-        $event = new Event\AlterFormEvent($builder, 'login');
+        $this->app['dispatcher']->dispatch(PhialEvents::ACCOUNT_ALTER_EMAIL, $event);
+
+        $msg = $event->getMessage();
+
+        return $this->app['mailer']->send($msg);
+    }
+
+    private function getForm(\Symfony\Component\Form\FormTypeInterface $form, $ctx)
+    {
+        $builder = $this->app['form.factory']->createBuilder($form);
+
+        $event = new Event\AlterFormEvent($builder, $ctx);
 
         $this->app['dispatcher']->dispatch(PhialEvents::ACCOUNT_ALTER_FORM, $event);
 
@@ -85,5 +135,27 @@ class Account extends Controller
         }
 
         return $user;
+    }
+
+    private function generateResetKey($email)
+    {
+        $user = $this->getUser($email);
+
+        if (!$user) {
+            return false;
+        }
+
+        $user['reset_token'] = $this->app['users']->generateResetToken();
+
+        try {
+            $this->app['users']->save($user);
+        } catch (\Exception $e) {
+            $this->flash('danger', 'Something went wrong. Try again?');
+            return false;
+        }
+
+        return $this->url('account.reset_password', array(
+            'token'     => $user['reset_token'],
+        ));
     }
 }
