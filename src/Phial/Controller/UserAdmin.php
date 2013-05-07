@@ -89,6 +89,26 @@ class UserAdmin extends Controller
         ));
     }
 
+    public function accountAction(Request $r)
+    {
+        $user = $this->app['current_user'];
+
+        $form = $this->getEditForm($user, false);
+
+        if ('POST' === $r->getMethod()) {
+            $user_id = $this->saveUser($form, $user, $r);
+
+            if ($user_id) {
+                return $this->app->redirect($this->url('account.account'));
+            }
+        }
+
+        return $this->render('@admin/account.html', array(
+            'form'  => $form->createView(),
+            'user'  => $user,
+        ));
+    }
+
     public function deleteAction($user_id, Request $r)
     {
         $user = $this->storage->getBy('id', $user_id);

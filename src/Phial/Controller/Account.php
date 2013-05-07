@@ -142,11 +142,6 @@ class Account extends Controller
         ));
     }
 
-    public function accountAction(Request $r)
-    {
-
-    }
-
     public function sendEmail(\Swift_Message $msg, $ctx)
     {
         $event = new Event\AlterEmailEvent($msg, $ctx);
@@ -158,9 +153,9 @@ class Account extends Controller
         return $this->app['mailer']->send($msg);
     }
 
-    private function getForm(\Symfony\Component\Form\FormTypeInterface $form, $ctx)
+    private function getForm(\Symfony\Component\Form\FormTypeInterface $form, $ctx, $object=null)
     {
-        $builder = $this->app['form.factory']->createBuilder($form);
+        $builder = $this->app['form.factory']->createBuilder($form, $object);
 
         $event = new Event\AlterFormEvent($builder, $ctx);
 

@@ -1,0 +1,27 @@
+{% extends '@admin/base.html' %}
+
+{% form_theme form '@forms/gumby_forms.html' %}
+
+{% block title %}Your Account{% endblock %}
+
+{% block admin_title %}Your Account{% endblock %}
+
+{% block admin_content %}
+
+{{ flash_messages(app.session.getFlashBag()) }}
+
+<form class="form admin-form"
+    method="post"
+    action="{% block account_form_action %}{{ url('account.account') }}{% endblock %}"
+    {{ form_enctype(form) }}>
+
+    {{ form_widget(form) }}
+
+    <div class="row">
+        <div class="btn large success">
+            <button type="submit">{% block account_form_save %}Save{% endblock %}</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
