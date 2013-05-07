@@ -30,6 +30,7 @@ class AccountControllerProvider extends ControllerProviderBase implements \Silex
 
         $c->match('/reset_password/{token}', $this->getController('controller.account', 'resetPassword'))
             ->method('GET|POST')
+            ->assert('token', '[a-gA-G0-9]+')
             ->bind('account.reset_password');
 
         $c->match('/', $this->getController('controller.account', 'account'))
