@@ -68,7 +68,7 @@ abstract class EmailBase implements EmailInterface, \ArrayAccess
         $msg->setBody($this->getHtmlBody(), 'text/html');
 
         if ($txt = $this->getTextBody()) {
-            $msg->addPart($msg, 'text/plain');
+            $msg->addPart($txt, 'text/plain');
         }
     }
 

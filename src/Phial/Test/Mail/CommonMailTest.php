@@ -104,7 +104,7 @@ class CommonMailTest extends \PHPUnit_Framework_TestCase
         $msg->expects($this->once())
             ->method('addPart')
             ->with(
-                $this->isType('object'),
+                $this->isType('string'),
                 $this->equalTo('text/plain')
             );
 
