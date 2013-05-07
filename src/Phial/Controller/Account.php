@@ -142,6 +142,18 @@ class Account extends Controller
         ));
     }
 
+    public function logoutAction(Request $r)
+    {
+        if ($this->app['session']->invalidate()) {
+            $redir = 'account.login';
+        } else {
+            $this->flash('danger', 'Error logging out. Try again.');
+            $redir = 'account.account';
+        }
+
+        return $this->app->redirect($this->url($redir));
+    }
+
     public function sendEmail(\Swift_Message $msg, $ctx)
     {
         $event = new Event\AlterEmailEvent($msg, $ctx);

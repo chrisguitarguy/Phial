@@ -51,3 +51,11 @@ td, th {
 .action-form button[type="submit"] {
   padding: 0 10px;
 }
+
+.logout-form {
+  margin-bottom: 0;
+}
+
+.logout-form-wrap {
+  padding: 0 16px;
+}

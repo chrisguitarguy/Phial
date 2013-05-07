@@ -33,6 +33,10 @@ class AccountControllerProvider extends ControllerProviderBase implements \Silex
             ->assert('token', '[a-gA-G0-9]+')
             ->bind('account.reset_password');
 
+        $c->post('/logout', $this->getController('controller.account', 'logout'))
+            ->secure('loggedin')
+            ->bind('account.logout');
+
         $c->match('/', $this->getController('controller.user_admin', 'account'))
             ->method('GET|POST')
             ->secure('loggedin')
