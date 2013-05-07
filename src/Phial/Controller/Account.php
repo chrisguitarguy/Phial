@@ -92,12 +92,59 @@ class Account extends Controller
 
     public function resetPasswordAction($token, Request $r)
     {
-        
+        $user = $this->app['users']->getBy('token', $token);
+
+        $form = $this->getform(new Form\ResetPasswordType(), 'reset_password');
+
+        if ('POST' === $r->getMethod()) {
+            $form->bind($r);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                if ($data['new_pass'] === $data['new_pass_again']) {
+                    $user['user_pass'] = $data['new_pass'];
+                    $user['reset_token'] = null;
+
+                    $res = false;
+                    try {
+                        $res = $this->app['users']->save($user);
+                    } catch (\Exception $e) {
+                        // todo logging
+                    }
+
+                    if ($res) {
+                        $this->flash('success', 'Password reset. Please log in.');
+
+                        $msg = \Swift_Message::newInstance()
+                            ->setTo($user['user_email']);
+
+                        $email = $this->app['email.password_notification'];
+
+                        $email->buildEmail($msg);
+
+                        $this->sendEmail($msg, 'password_notification');
+
+                        return $this->app->redirect($this->url('account.login'), 303);
+                    }
+
+                    $this->flash('warning', 'Error reseting password.');
+                } else {
+                    $this->flash('warning', 'Passwords must match.');
+                }
+            }
+        }
+
+        return $this->render('@admin/reset_password.html', array(
+            'form'  => $form->createView(),
+            'user'  => $user,
+            'token' => $token,
+        ));
     }
 
     public function accountAction(Request $r)
     {
-        
+
     }
 
     public function sendEmail(\Swift_Message $msg, $ctx)

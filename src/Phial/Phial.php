@@ -322,5 +322,19 @@ class Phial extends \Silex\Application
                 )
             );
         };
+
+        $this['email.password_notification_class'] = __NAMESPACE__ . '\\Mail\\PasswordNotificationEmail';
+        $this['email.password_notification'] = function($app) {
+            return new $app['email.password_notification_class'](
+                $app['admin_email'],
+                $app['twig'],
+                array(
+                    'protocol'  => 'http',
+                    'domain'    => $app['domain'],
+                    'site_name' => $app['site_name'],
+                    'url'       => $app['url_generator']->generate('account.forgot_password'),
+                )
+            );
+        };
     }
 }
