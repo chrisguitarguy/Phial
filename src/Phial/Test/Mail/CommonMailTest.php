@@ -21,6 +21,7 @@ class CommonMailTest extends \PHPUnit_Framework_TestCase
 
         return array(
             array(new \Phial\Mail\ResetPasswordEmail('test@phial.dev', $twig)),
+            array(new \Phial\Mail\PasswordNotificationEmail('test@phial.dev', $twig)),
         );
     }
 
